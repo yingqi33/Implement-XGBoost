@@ -106,9 +106,6 @@ def cross_validation(log_min_impurity_decreases, Ms, n_splits=5):
     best_log_min_impurity_decrease = plot_values[index,0]
     best_M = int(plot_values[index,1])
 
-    #########################################################
-
-
     return plot_values, best_log_min_impurity_decrease, best_M
 
 def run():
