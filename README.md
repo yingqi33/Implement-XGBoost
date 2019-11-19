@@ -1,4 +1,4 @@
-# implement-XGBoost
+# Implement-XGBoost
 
 XGBoost is an optimized distributed gradient boosting library designed to be highly efficient, flexible and portable. 
 It implements machine learning algorithms under the Gradient Boosting framework. 
