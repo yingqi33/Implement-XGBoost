@@ -10,10 +10,8 @@ def load_data():
     # load data 
     data = pd.read_csv(
         'http://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data', header=None)
-    p_ = data.shape[1]
-    p = p_ - 1
-    X = data.iloc[:, :p]
-    y = data.iloc[:, p]
+    X = data.iloc[:, :-1]
+    y = data.iloc[:, -1]
 
     # split the data to training set and testing test
     # the training set will be used to choose hyperparameters
@@ -68,10 +66,7 @@ class XGBOOST():
             y_pred = (y_pred > 0.5)
             return y_pred
 
-            pass
-
 #########################################################
-
 
 # define a function to do cross-validation to search for hyperparameter values with training set
 def cross_validation(log_min_impurity_decreases, Ms, n_splits=5):
@@ -88,13 +83,12 @@ def cross_validation(log_min_impurity_decreases, Ms, n_splits=5):
         for k in range(len_M):
             acc = 0
             ypred = XGBOOST(min_impurity_decrease = \
-                        np.exp(log_min_impurity_decreases[m]),M = Ms[k])
+                        np.exp(log_min_impurity_decreases[m]), M = Ms[k])
             for train_index, test_index in kf.split(X_train):
                 traindata, trainlabel = X_train[train_index], y_train[train_index]
                 testdata, testlabel = X_train[test_index], y_train[test_index]
-                ypred.fit(train_features = traindata, train_labels = trainlabel)
-                yvalid = ypred.scoring(test_features = testdata,\
-                                                   test_labels = testlabel)
+                ypred.fit(traindata, trainlabel)
+                yvalid = ypred.scoring(testdata, testlabel)
                 acc += np.sum(yvalid == testlabel)/fold_size
             mean_acc = acc/n_splits
 #         print("mean accuracy when log_id is %d and M is %d: "\
@@ -121,23 +115,15 @@ def run():
     ax.plot_trisurf(plot_values[:, 0], plot_values[:, 1], plot_values[:, 2], linewidth=0.2, antialiased=True)
     plt.show()
 
-
     # fit the train data with the chosen hyperparameters
- 
-    xgb = XGBOOST(min_impurity_decrease = np.exp(best_log_min_impurity_decrease),\
-              M = best_M)
-    xgb.fit(train_features = X_train, train_labels = y_train)
+    xgb = XGBOOST(min_impurity_decrease = np.exp(best_log_min_impurity_decrease), M = best_M)
+    xgb.fit(X_train, y_train)
 
     # print the testing accuracy with the chosen models
-
-    ypred = xgb.scoring(test_features = X_test,test_labels = y_test)
+    ypred = xgb.scoring(X_test, y_test)
     acc = np.sum(ypred == y_test)/len(y_test)
     print("The chosen parameters are: ")
     print("Best log_min_impurity_decrease: ", best_log_min_impurity_decrease)
     print("Best number of trees M: ", best_M)
     print("The testing accuracy with the chosen model: ", acc)
-
-
-
-
 
