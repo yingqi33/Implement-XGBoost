@@ -5,4 +5,4 @@ It implements machine learning algorithms under the Gradient Boosting framework.
 XGBoost provides a parallel tree boosting (also known as GBDT, GBM) that solve many data science problems in a fast and accurate way. 
 The same code runs on major distributed environment (Hadoop, SGE, MPI) and can solve problems beyond billions of examples.
 
-Here I implement XGBoost from scratch so as to see how this algorithm draw samples, train classifiers and update results.
+Here I implement XGBoost from scratch so as to see how this algorithm draw samples, train classifiers and update results. I use Weighted Least Squares for optimization and Log Loss as the loss function.
